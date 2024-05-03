@@ -29,7 +29,7 @@ def signup():
     db.session.add(user)
     db.session.commit()
 
-    return jsonify({'success': True, 'success': 'Success'}), 200
+    return jsonify({'success': True, 'message': 'Success'}), 200
 
 @app.route('/api/login', methods=['POST', 'GET'])
 def login():

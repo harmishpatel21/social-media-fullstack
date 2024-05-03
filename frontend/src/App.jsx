@@ -1,64 +1,41 @@
-import React, { useState } from 'react';
-import './App.css';
+import React, { useState } from "react"
+import SignUp from "./components/SignUp"
+import Login from "./components/Login"
+import WelcomeMessage from "./components/WelcomeMessage"
 
-function App() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
+const App = () => {
+    const [isSignedUp, setIsSignedUp] = useState(false)
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const [username, setUsername] = useState(false)
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await fetch('http://127.0.0.1:5000/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
-
-      if (response.status === 200) {
-        setMessage('Login successful');
-      } else {
-        const data = await response.json();
-        setMessage(data.error);
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      setMessage('An error occurred. Please try again.');
+    const handleSignUpSuccess = () => {
+        setIsSignedUp(true)
     }
-  };
 
-  return (
-    <div className="App">
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Username:
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </label>
-        <br />
-        <label>
-          Password:
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
-        <br />
-        <button type="submit">Login</button>
-      </form>
-      {message && <p>{message}</p>}
-    </div>
-  );
+    const handleLoginSuccess = (username) => {
+        setUsername(username)
+        setIsLoggedIn(true)
+    }
+
+    return (
+        <div>
+            <h1>Welcom to Social Media App</h1>
+            <div>
+                <h2>Sign Up</h2>
+                <SignUp onSignUpSuccess={handleSignUpSuccess} />
+            </div>
+
+            {!isLoggedIn ? (
+                <div>
+                    <h2>Login</h2>
+                    <Login onLoginSuccess={handleLoginSuccess} />
+                </div>
+            ) : (
+                <WelcomeMessage username={username} />
+            )}
+
+        </div>
+    )
 }
 
-export default App;
+export default App
