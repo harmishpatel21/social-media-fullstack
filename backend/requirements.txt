@@ -3,3 +3,4 @@ Flask-SQLAlchemy
 flask-login
 flask-cors
 flask-uploads
+python-dotenv

@@ -1,10 +1,11 @@
-from flask import request, jsonify
+from flask import request, jsonify, session
 from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.utils import secure_filename
 
 from config import app, db, images
 from models import User, Post
 from flask_uploads import configure_uploads
+import os
 
 @app.route('/home')
 def home():
@@ -42,6 +43,7 @@ def login():
     
     user = User.query.filter_by(username=username).first()
     if user is not None:
+        session['user_id'] = user.id
         print(user)
         if password == user.password:
             return jsonify({'success': True, 'message': 'Logged in'}), 200
@@ -49,6 +51,34 @@ def login():
             return jsonify({'success': False, 'error': 'Invalid Password'}), 401
     else:
         return jsonify({'success': False, 'error': 'User not found'}), 401
+
+
+@app.route('/api/upload-photo', methods=['POST'])
+def upload_photo():
+    user_id = session.get('user_id')
+    user = User.query.get(user_id)
+
+    if not user:
+        return jsonify( {'success': False, 'error': 'User Not Found'}), 404
+    else:
+        print(user)
+        
+    if 'file' not in request.files:
+        return jsonify({'success': False, 'error': 'No File Provided'}), 400
+    
+    file = request.files['file']
+    
+    if file:
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(app.config['UPLOADS_DEFAULT_DEST'], filename)
+        file.save(file_path)
+
+    post = Post(image_file=file_path, author=user)
+
+    db.session.add(post)
+    db.session.commit()
+
+    return jsonify({'success': True, 'message': 'Photo uploaded successfully'}), 200
 
         
 
