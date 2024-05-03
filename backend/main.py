@@ -41,11 +41,14 @@ def login():
         return jsonify({'error': 'Username or password missing'}), 401
     
     user = User.query.filter_by(username=username).first()
-    print(user)
-    if password == user.password:
-        return jsonify({'success': True, 'message': 'Logged in'}), 200
+    if user is not None:
+        print(user)
+        if password == user.password:
+            return jsonify({'success': True, 'message': 'Logged in'}), 200
+        else:
+            return jsonify({'success': False, 'error': 'Invalid Password'}), 401
     else:
-        return jsonify({'success': False, 'error': 'Invalid username or password'}), 401
+        return jsonify({'success': False, 'error': 'User not found'}), 401
 
         
 
