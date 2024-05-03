@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import SignUp from "./components/SignUp"
 import Login from "./components/Login"
 import WelcomeMessage from "./components/WelcomeMessage"
+import UploadForm from "./components/UploadForm"
 
 const App = () => {
     const [isSignedUp, setIsSignedUp] = useState(false)
@@ -31,7 +32,10 @@ const App = () => {
                     <Login onLoginSuccess={handleLoginSuccess} />
                 </div>
             ) : (
-                <WelcomeMessage username={username} />
+                <div>
+                    <WelcomeMessage username={username} />
+                    <UploadForm />
+                </div>
             )}
 
         </div>
