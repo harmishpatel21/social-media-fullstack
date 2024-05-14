@@ -3,6 +3,7 @@ import SignUp from "./components/SignUp"
 import Login from "./components/Login"
 import WelcomeMessage from "./components/WelcomeMessage"
 import UploadForm from "./components/UploadForm"
+import MyPhotos from "./components/MyPhotos"
 
 const App = () => {
     const [isSignedUp, setIsSignedUp] = useState(false)
@@ -24,7 +25,7 @@ const App = () => {
 
     return (
         <div>
-            <h1>Welcome to Social Media App</h1>
+            {/* <h1>Welcome to Social Media App</h1> */}
 
             {!isLoggedIn && (
                 <div>
@@ -50,6 +51,7 @@ const App = () => {
             {isLoggedIn && (
                 <div>
                     <WelcomeMessage username={username} />
+                    <MyPhotos />
                     <UploadForm />
                 </div>
             )}

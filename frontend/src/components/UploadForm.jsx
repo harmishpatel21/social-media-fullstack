@@ -25,14 +25,22 @@ const UploadForm = () => {
         formData.append('file', file);
 
         try {
+
+            const access_token = localStorage.getItem('access_token')
+            if (!access_token) {
+                setError('Access token not found. Please login.')
+                return
+            }
+
             const response = await fetch('http://127.0.0.1:5000/api/upload-photo', {
                 method: 'POST',
-                credentials: 'include', // Include cookies in the request
+                headers: {
+                    'Authorization': `Bearer ${access_token}`
+                },
                 body: formData
             });
 
-            console.log(response)
-            const data = await response
+            const data = await response.json()
             // console.log(data)
 
             if (data.success) {
