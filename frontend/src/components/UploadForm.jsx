@@ -1,5 +1,6 @@
 // frontend/src/components/UploadForm.jsx
 import React, { useState } from 'react'
+import '../style/FormStyle.css'
 
 const UploadForm = () => {
     const [file, setFile] = useState(null)
@@ -57,17 +58,22 @@ const UploadForm = () => {
     };
 
     return (
-        <div>
+        <div className='form-container'>
             <h2>Upload Image</h2>
+
             <form onSubmit={handleSubmit}>
-                <input type="file" onChange={handleChange} />
-                {previewURL && (
+                <div className='input-container'>
+                    <input type="file" onChange={handleChange} />
+                </div>
+                {/* {previewURL && (
                     <img src={previewURL} alt="Preview" style={{ maxWidth: '100%', maxHeight: '200px', marginTop: '10px' }} />
-                    )}
-                {error && <p style={{ color: 'red' }}>{error}</p>}
-                <button type="submit">Upload</button>
+                    )} */}
+                
+                <div className='button-container'>
+                    <button type="submit">Upload</button>
+                </div>
+                {error && <p className='error-message'>{error}</p>}
             </form>
-            {/* {error && <p style={{ color: 'red' }}>{error}</p>} */}
         </div>
     );
 };

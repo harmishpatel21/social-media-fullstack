@@ -1,10 +1,10 @@
 import React, { useState } from "react";
+import '../style/WelcomeMessage.css'
 
 const WelcomeMessage = ({ username }) => {
     return (
-        <div>
-            <h2>Welcome, {username}</h2>
-            <p> You are now logged in</p>
+        <div className="welcome-message-container">
+            <h2>{username}</h2>
         </div>
     )
 }

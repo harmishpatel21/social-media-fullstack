@@ -32,12 +32,19 @@ const SignUp = ({ onSignUpSuccess }) => {
     }
 
     return (
-        <div>
+
+        <div className="form-container">
+        <div className="input-container">
             <input type='text' placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
+        </div>
+        <div className="input-container">
             <input type='password' placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-            <button onClick={handleSignUp}>Sign Up</button>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            {message && <p style={{ color: 'green' }}>{message}</p>}
+        </div>
+        <div className="button-container">
+            <button onClick={handleSignUp}>Sign up</button>
+        </div>
+
+        {error && <p className="error-message">{error}</p>}
         </div>
     )
 }

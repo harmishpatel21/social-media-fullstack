@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import '../style/MyPhotos.css'
+import '../style/FormStyle.css'
 
 const MyPhotos = () => {
     
@@ -27,20 +29,19 @@ const MyPhotos = () => {
 
     return (
         <div>
-            <h2> My Photos</h2>
-            <div>
+            <h2>My Photos</h2>
+            <div className="button-container">
                 <button onClick={fetchPhotos}>Show Photos</button>
-                {
-                    photos.map(photo => (
-                        console.log(`${photo.image_file}`)
-                    ))
-                }
-                
+            </div>
+            <br />
+            <div className="photo-grid">
                 {photos.map(photo => (
-                    <img key={photo.id} src={`http://localhost:5000/uploads/${photo.image_file}`} alt={`Photo ${photo.id}`} />
+                    <div key={photo.id} className="photo-tile">
+                        <img src={`http://localhost:5000/uploads/${photo.image_file}`} alt={`Photo ${photo.id}`} />
+                    </div>
                 ))}
             </div>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {error && <p className="error-message">{error}</p>}
         </div>
     )
 }
