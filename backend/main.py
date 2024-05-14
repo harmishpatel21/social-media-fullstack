@@ -1,10 +1,9 @@
-from flask import request, jsonify, session, send_file
-from flask_login import login_required, current_user, login_user, logout_user
+from flask import request, jsonify, session, send_file, send_from_directory
+from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity, unset_jwt_cookies
 from werkzeug.utils import secure_filename
 
 from config import app, db, images
 from models import User, Post
-from auth import login_manager, load_user
 from flask_uploads import configure_uploads
 import os
 
@@ -45,32 +44,39 @@ def login():
     if user is not None:
         if password == user.password:
             print(user.id)
-            login_user(user)
-            return jsonify({'success': True, 'message': 'Logged in'}), 200
+            access_token = create_access_token(identity=username)
+            # login_user(user)
+            return jsonify({'success': True, 'message': 'Logged in', 'access_token': access_token}), 200
         else:
             return jsonify({'success': False, 'error': 'Invalid Password'}), 401
     else:
         return jsonify({'success': False, 'error': 'User not found'}), 401
 
+@app.route('/api/logout', methods=['POST'])
+@jwt_required()
+def logout():
+    resp = jsonify({'message': 'Logged out'})
+    unset_jwt_cookies(resp)
+    return resp, 200
 
 @app.route('/api/@me', methods=['POST'])
-@login_required
+@jwt_required()
 def get_current_user():
-    user = current_user
+    user = get_jwt_identity()
     if not user:
         return jsonify({'error': 'Unauthorized'}), 401
-    
-    user = User.query.filter_by(id=user.id).first()
+    print(user)
+    user = User.query.filter_by(username=user).first()
     return jsonify({
         'id': user.id,
         'username' : user.username
     })
 
 @app.route('/api/upload-photo', methods=['POST'])
-@login_required
+@jwt_required()
 def upload_photo():
     print("COMING TO UPLOAD PHOTO")
-    user = current_user
+    user = get_jwt_identity()
     if not user:
         return jsonify( {'success': False, 'error': 'User Not Found'}), 404
         
@@ -84,39 +90,69 @@ def upload_photo():
         file_path = os.path.join(app.config['UPLOADS_DEFAULT_DEST'], filename)
         file.save(file_path)
 
-    post = Post(image_file=file_path, author=user)
+        post = Post(image_file=file_path, user_id=user)
 
-    db.session.add(post)
-    db.session.commit()
+        db.session.add(post)
+        db.session.commit()
 
     return jsonify({'success': True, 'message': 'Photo uploaded successfully'}), 200
 
-@app.route('/api/user-image/<int:user_id>', methods=['GET'])
-@login_required
-def get_user_image(user_id):
-    if current_user.id != user_id:
-        return jsonify({
-            'error': 'Unauthorized'
-        }), 400
+@app.route('/api/my-photos', methods=['GET'])
+@jwt_required()
+def my_photos():
+    print("COMING HERE TO SHOW PHOTOS")
+    user = get_jwt_identity()
     
-    user_image = Post.query.filter_by(user_id=user_id).all()
-
-    if not user_image:
-        return jsonify({
-            'message': 'User Posts'
-        }), 404
+    if not user:
+        return jsonify( {'success': False, 'error': 'User Not Found'}), 404
     
-    image_paths = [image.image_file for image in user_image]
-    image_path = image_paths[0]
-    return jsonify({
-        'image_paths': image_path,
-        'message': 'Image Sent'
-    }), 200
+    user__ = User.query.filter_by(username=user).first()
+    user_id = user__.id
+    
+    if not user:
+        return jsonify({'success': False, 'error': 'User Not Found'}), 404
+    
+    photos = Post.query.filter_by(user_id=user).all()
+    if(len(photos) == 0):
+        return jsonify({'success': False, 'error': 'No Photos Available'}), 404
+    
+    photos_data = [{'id': photo.id, 'image_file': photo.image_file} for photo in photos]
+    # photos_data=[]
+    return jsonify({'success': True, 'photos': photos_data}), 200
 
-@app.route('/api/image/<path:image_path>', methods=['GET'])
-@login_required
-def get_image(image_path):
-    return send_file(image_path)
+@app.route('/uploads/<path:filename>')
+def serve_upload(filename):
+    print("FILENAME====", filename)
+    filename = filename.split("/")[-1]
+    print("FILENAME====", filename)
+    return send_from_directory(app.config['UPLOADS_DEFAULT_DEST'], filename)
+
+# @app.route('/api/user-image/<int:user_id>', methods=['GET'])
+# @login_required
+# def get_user_image(user_id):
+#     if current_user.id != user_id:
+#         return jsonify({
+#             'error': 'Unauthorized'
+#         }), 400
+    
+#     user_image = Post.query.filter_by(user_id=user_id).all()
+
+#     if not user_image:
+#         return jsonify({
+#             'message': 'User Posts'
+#         }), 404
+    
+#     image_paths = [image.image_file for image in user_image]
+#     image_path = image_paths[0]
+#     return jsonify({
+#         'image_paths': image_path,
+#         'message': 'Image Sent'
+#     }), 200
+
+# @app.route('/api/image/<path:image_path>', methods=['GET'])
+# @login_required
+# def get_image(image_path):
+#     return send_file(image_path)
 
 
 if __name__ == "__main__":
