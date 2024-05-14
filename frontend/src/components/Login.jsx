@@ -1,5 +1,5 @@
-import axios from "axios";
 import React, { useState } from "react";
+import '../style/FormStyle.css'
 
 const Login = ({ onLoginSuccess }) => {
 
@@ -42,11 +42,18 @@ const Login = ({ onLoginSuccess }) => {
     }
 
     return (
-        <div>
-            <input type='text' placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-            <input type='password' placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-            <button onClick={handleLogin}>Login</button>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+        <div className="form-container">
+            <div className="input-container">
+                <input type='text' placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
+            </div>
+            <div className="input-container">
+                <input type='password' placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            </div>
+            <div className="button-container">
+                <button onClick={handleLogin}>Login</button>
+            </div>
+
+            {error && <p className="error-message">{error}</p>}
         </div>
     )
 }

@@ -1,0 +1,23 @@
+/* WelcomeMessage.css */
+
+.welcome-message-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #ed922a; /* Reddit orange color */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.welcome-message-container::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    right: 15px;
+    border-width: 8px;
+    border-style: solid;
+    border-color: #524a48 transparent transparent transparent;
+}
