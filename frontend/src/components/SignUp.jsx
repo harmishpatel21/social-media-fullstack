@@ -1,5 +1,17 @@
 import React, { useState } from "react";
-import "../style/App.css"
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import Paper from "@mui/material/Paper";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+const defaultTheme = createTheme();
+
 
 const SignUp = ({ onSignUpSuccess }) => {
 
@@ -7,8 +19,11 @@ const SignUp = ({ onSignUpSuccess }) => {
     const [password, setPassword] = useState('')
     const [message, setMessage] = useState('')
     const [error, setError] = useState('')
+    const [usernameExistsError, setUsernameExistsError] = useState(false)
 
-    const handleSignUp = async () => {
+    const handleSignUp = async (e) => {
+        e.preventDefault()
+        
         try {
             const response = await fetch('http://127.0.0.1:5000/api/signup', {
                 method: 'POST',
@@ -19,11 +34,16 @@ const SignUp = ({ onSignUpSuccess }) => {
             })
 
             const data = await response.json()
+            console.log(data)
 
             if (data.success) {
                 onSignUpSuccess()
                 setMessage(data.message)
             } else {
+                // Todo: change to dynamic response instead hard coded string
+                if (data.error === 'Username already exists') {
+                    setUsernameExistsError(true)
+                }
                 setError(data.error)
             }
         } catch {
@@ -32,20 +52,25 @@ const SignUp = ({ onSignUpSuccess }) => {
         }
     }
 
+    const handleUsernameChange = (e) => {
+        setUsername(e.target.value)
+        setUsernameExistsError(false)
+    }
+
     return (
 
         <div className="form-container">
-            <div className="input-container">
-                <input type='text' placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-            </div>
-            <div className="input-container">
-                <input type='password' placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-            </div>
-            <div className="button-container">
-                <button onClick={handleSignUp}>Sign up</button>
-            </div>
+        <div className="input-container">
+            <input type='text' placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
+        </div>
+        <div className="input-container">
+            <input type='password' placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        </div>
+        <div className="button-container">
+            <button onClick={handleSignUp}>Sign up</button>
+        </div>
 
-            {error && <p className="error-message">{error}</p>}
+        {error && <p className="error-message">{error}</p>}
         </div>
     )
 }

@@ -127,33 +127,6 @@ def serve_upload(filename):
     print("FILENAME====", filename)
     return send_from_directory(app.config['UPLOADS_DEFAULT_DEST'], filename)
 
-# @app.route('/api/user-image/<int:user_id>', methods=['GET'])
-# @login_required
-# def get_user_image(user_id):
-#     if current_user.id != user_id:
-#         return jsonify({
-#             'error': 'Unauthorized'
-#         }), 400
-    
-#     user_image = Post.query.filter_by(user_id=user_id).all()
-
-#     if not user_image:
-#         return jsonify({
-#             'message': 'User Posts'
-#         }), 404
-    
-#     image_paths = [image.image_file for image in user_image]
-#     image_path = image_paths[0]
-#     return jsonify({
-#         'image_paths': image_path,
-#         'message': 'Image Sent'
-#     }), 200
-
-# @app.route('/api/image/<path:image_path>', methods=['GET'])
-# @login_required
-# def get_image(image_path):
-#     return send_file(image_path)
-
 
 if __name__ == "__main__":
     with app.app_context():
