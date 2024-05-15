@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import '../style/FormStyle.css'
+// import '../style/FormStyle.css'
+import '../style/App.css'
 
 const Login = ({ onLoginSuccess }) => {
 
@@ -29,7 +30,7 @@ const Login = ({ onLoginSuccess }) => {
             if (data.success) {
                 setMessage(data.message)
                 onLoginSuccess(username)
-                const {access_token} = data 
+                const { access_token } = data
                 // console.log(access_token)
                 localStorage.setItem('access_token', access_token)
             } else {

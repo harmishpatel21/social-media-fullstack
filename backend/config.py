@@ -19,6 +19,11 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
 # app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+
+upload_dir = 'uploads'
+if not os.path.exists(os.path.join(os.getcwd(), upload_dir)):
+    os.makedirs(os.path.join(os.getcwd(), upload_dir))
+
 app.config['UPLOADS_DEFAULT_DEST'] = os.path.join(os.getcwd(), 'uploads')
 
 db = SQLAlchemy(app)
