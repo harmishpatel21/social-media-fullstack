@@ -28,43 +28,44 @@ const App = () => {
         <div className="app-container">
             <div className="background"></div>
             <div className="content-container">
-            <div className="header">
-                <h1>Welcome</h1>
-            </div>
-            {/* <h1>Welcome to Social Media App</h1> */}
-
-            {!isLoggedIn && (
-                <div className="button-container auth-buttons">
-                    <button onClick={() => setShowSignUp(true)}>Sign Up</button>
-                    <button onClick={() => setShowLogin(true)}>Login</button>
+                <div className="header">
+                    <h1>Welcome</h1>
                 </div>
-            )}
+                {/* <h1>Welcome to Social Media App</h1> */}
 
-            {showSignUp && (
-                <div className="button-container">
-                    <h2>Sign Up</h2>
-                    <SignUp onSignUpSuccess={handleSignUpSuccess} />
-                </div>
-            )}
-
-            {showLogin && !isLoggedIn && (
-                <div className="auth-form">
-                    <h2>Login</h2>
-                    <Login onLoginSuccess={handleLoginSuccess} />
-                </div>
-            )}
-
-            {isLoggedIn && (
-                <div className="content">
-                    <WelcomeMessage username={username} />
-                    <div className="upload-container">
-                        <UploadForm />
+                {!isLoggedIn && (
+                    <div className="button-container auth-buttons">
+                        <button onClick={() => setShowSignUp(true)}>Sign Up</button>
+                        <button onClick={() => setShowLogin(true)}>Login</button>
                     </div>
-                    <div className="photos-container">
-                        <MyPhotos />
+                )}
+
+                {showSignUp && (
+                    <div className="auth-form">
+                        <h2>Sign Up</h2>
+                        <SignUp onSignUpSuccess={handleSignUpSuccess} />
                     </div>
-                </div>
-            )}
+                )}
+
+                {showLogin && !isLoggedIn && (
+                    <div className="auth-form">
+                        <h2>Login</h2>
+                        <Login onLoginSuccess={handleLoginSuccess} />
+                    </div>
+                )}
+
+                {isLoggedIn && (
+                    <div className="content">
+                        <WelcomeMessage username={username} />
+                        <div className="my-photos-container">
+                            <MyPhotos />
+                        </div>
+                        <div className="upload-container">
+                            <UploadForm />
+                        </div>
+
+                    </div>
+                )}
             </div>
         </div>
     )
