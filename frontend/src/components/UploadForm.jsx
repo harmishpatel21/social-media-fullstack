@@ -1,23 +1,17 @@
 // frontend/src/components/UploadForm.jsx
 import React, { useState } from 'react'
-import '../style/FormStyle.css'
+import { Button, Container, Typography } from '@mui/material'
 
 const UploadForm = () => {
     const [file, setFile] = useState(null)
-    const [previewURL, setPreviewURL] = useState('')
+    const [filename, setFilename] =useState('')
     const [error, setError] = useState(null)
 
     const handleChange = (e) => {
         const selectedFile = e.target.files[0]
-        if (selectedFile) {
-            setFile(selectedFile)
-            const reader = new FileReader()
-            reader.onload = () => {
-                setPreviewURL(reader.result)
-            }
-            reader.readAsDataURL(selectedFile)
-        }
-    };
+        setFile(selectedFile)
+        setFilename(selectedFile.name)
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -39,7 +33,7 @@ const UploadForm = () => {
                     'Authorization': `Bearer ${access_token}`
                 },
                 body: formData
-            });
+            })
 
             const data = await response.json()
             // console.log(data)
@@ -48,34 +42,46 @@ const UploadForm = () => {
                 console.log(data)
                 setError(data.error)
             } else {
-
-                setError('NOOO')
+                setError('Error Uploading Photo')
             }
         } catch (error) {
-            console.error('Error uploading photo:', error);
-            setError('An error occurred while uploading the photo.');
+            console.error('Error uploading photo:', error)
+            setError('An error occurred while uploading the photo.')
         }
-    };
+    }
 
     return (
-        <div className='form-container'>
-            <h2>Upload Image</h2>
-
+        <Container>
+            <Typography variant='h4' align='center' gutterBottom>
+                Upload Image
+            </Typography>
             <form onSubmit={handleSubmit}>
-                <div className='input-container'>
-                    <input type="file" onChange={handleChange} />
-                </div>
-                {/* {previewURL && (
-                    <img src={previewURL} alt="Preview" style={{ maxWidth: '100%', maxHeight: '200px', marginTop: '10px' }} />
-                    )} */}
-                
-                <div className='button-container'>
-                    <button type="submit">Upload</button>
-                </div>
-                {error && <p className='error-message'>{error}</p>}
+                <input 
+                    type='file'
+                    accept='image/*'
+                    onChange={handleChange}
+                    style={{ display: 'none'}}
+                    id='upload-button'
+                />
+                <label htmlFor="upload-button">
+                    <Button component="span" variant="contained" color="primary">
+                        Choose File
+                    </Button>
+                </label>
+                <Typography variant='body1' display='inline' gutterBottom>
+                    {filename && `Selected file: ${filename}`}
+                </Typography>
+                <Button type="submit" variant="contained" color="primary" disabled={!file}>
+                    Upload
+                </Button>
+                {error && (
+                    <Typography variant="body1" color="error">
+                        {error}
+                    </Typography>
+                )}
             </form>
-        </div>
-    );
-};
+        </Container>
+    )
+}
 
 export default UploadForm;
