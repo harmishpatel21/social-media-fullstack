@@ -3,25 +3,29 @@ import { Button, Grid, Typography } from "@mui/material";
 import { CircularProgress } from "@mui/material";
 import { styled } from "@mui/system"
 
-const StyledGridItem = styled(Grid)(({theme}) => ({
+const StyledGridItem = styled(Grid)(({ theme }) => ({
     position: "relative",
-    "&:hover img": {
-        transform: "scale(1.05)",
-    },
-    "&:not(:last-child)::after": {
-        content: '""',
+    border: "1px solid black",
+    overflow: "hidden",
+    boxSizing: "border-box",
+    "& img": {
+        width: "100%",
+        height: "100%",
+        objectFit: "cover",
+        transition: "tranform 0.3s ease",
         position: "absolute",
-        bottom: 0,
+        top: "50%",
         left: "50%",
-        tranform: "transletX(-50%)",
-        width: "90%",
-        borderBottom: `1px solid ${theme.palette.divider}`
+        transform: "translate(-50%, -50%)",
+    },
+    "&:hover img": {
+        transform: "translate(-50%, -50%) scale(1.05)",
     },
 }))
 
 
 const MyPhotos = () => {
-    
+
     const [photos, setPhotos] = useState([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
@@ -30,12 +34,12 @@ const MyPhotos = () => {
         setLoading(true)
         try {
             const response = await fetch('http://127.0.0.1:5000/api/my-photos', {
-            method: 'GET',    
-            headers: {
+                method: 'GET',
+                headers: {
                     'Authorization': `Bearer ${localStorage.getItem('access_token')}`
                 }
             })
-            
+
             const data = await response.json()
             if (data.success) {
                 setPhotos(data.photos)
@@ -43,7 +47,7 @@ const MyPhotos = () => {
                 setError(data.error)
             )
         } catch (error) {
-            setError('Error Fetching photos',error)
+            setError('Error Fetching photos', error)
         }
         setLoading(false)
     }
@@ -56,18 +60,17 @@ const MyPhotos = () => {
                 </Typography>
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid item xs={12} sx={{ marginBottom: 2 }}>
                 <Button variant="contained" onClick={fetchPhotos} disabled={loading}>
                     {loading ? <CircularProgress size={24} /> : 'Show Photos'}
                 </Button>
             </Grid>
 
             {photos.map((photo) => (
-                <StyledGridItem key={photo.id} item xs={12} sm={6} md={4}>
+                <StyledGridItem key={photo.id} item xs={12} sm={6} md={4} sx={{ height: 200 }}>
                     <img
                         src={`http://127.0.0.1:5000/uploads/${photo.image_file}`}
                         alt={`Photo ${photo.id}`}
-                        style={{ maxWidth: "100%", height: "auto" }}
                     />
                 </StyledGridItem>
             ))}

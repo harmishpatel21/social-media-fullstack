@@ -1,14 +1,35 @@
-import React, {useState} from "react";
-import AppBar from "@mui/material/AppBar"
-import Toolbar from "@mui/material/Toolbar"
-import Typography from "@mui/material/Typography"
-import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
-import SignUp from "./components/SignUp";
-import Login from "./components/Login";
-import WelcomeMessage from "./components/WelcomeMessage";
-import UploadForm from "./components/UploadForm";
-import MyPhotos from "./components/MyPhotos";
+import React, { useState } from "react"
+import {
+    AppBar,
+    Toolbar,
+    Typography,
+    Button,
+    Container,
+    CssBaseline,
+    ThemeProvider,
+    createTheme,
+    Box,
+} from "@mui/material"
+import SignUp from "./components/SignUp"
+import Login from "./components/Login"
+import WelcomeMessage from "./components/WelcomeMessage"
+import UploadForm from "./components/UploadForm"
+import MyPhotos from "./components/MyPhotos"
+
+const theme = createTheme({
+    palette: {
+        primary: {
+            main: "#4a148c"
+        },
+        secondary: {
+            main: "#ff6f00"
+        },
+        background: {
+            default: "f3e5f5"
+        },
+    },
+})
+
 
 const HomePage = () => {
     const [showSignUp, setShowSignUp] = useState(false)
@@ -27,70 +48,83 @@ const HomePage = () => {
         setShowSignUp(false)
         setShowLogin(false)
     }
-    
+
     const handleLogout = () => {
         setUsername('')
         setIsLoggedIn(false)
     }
 
     return (
-        <Container>
-            <AppBar position="static">
-                <Toolbar>
-                    <Typography variant="h6" component="div" sx={{flexGrow:1}}>
-                        Welcome
-                    </Typography>
+        <ThemeProvider theme={theme}>
+            <CssBaseline />
 
-                    {!isLoggedIn ? (
-                        <>
-                            <Button 
-                                color="inherit" 
-                                onClick={() => {
-                                    setShowSignUp(true)
-                                    setShowLogin(false)
-                                }} 
-                            >
-                                Sign Up
-                            </Button>
-                            <Button 
-                                color="inherit" 
-                                onClick={() => { 
-                                    setShowLogin(true)
-                                    setShowSignUp(false)
-                                }}
-                            >
-                                Login
-                            </Button>
-                        </>
-                    ) : (
-                        <>
-                            <Typography variant="h6" component="div" sx={{flexGrow:1}}>
-                                <WelcomeMessage username={username} />
-                            </Typography>
-                            <Button color="inherit" onClick={handleLogout}>Logout</Button>
-                        </>
-                    )}
-                </Toolbar>
-            </AppBar>
             <Container>
-                
-                {!isLoggedIn && showSignUp && <SignUp onSignUpSuccess={handleSignUpSuccess} /> }
-                {!isLoggedIn && showLogin && <Login onLoginSuccess={handleLoginSuccess} />}
-                {isLoggedIn && (
-                    <>
-                        <WelcomeMessage username={username} />
-                        <Container sx={{display:'flex'}} >
-                            <Container sx={{flex: 3}}>
+                <AppBar position="static" color="primary">
+                    <Toolbar>
+                        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                            Welcome
+                        </Typography>
+
+                        {!isLoggedIn ? (
+                            <>
+                                <Button
+                                    color="inherit"
+                                    onClick={() => {
+                                        setShowSignUp(true)
+                                        setShowLogin(false)
+                                    }}
+                                >
+                                    Sign Up
+                                </Button>
+                                <Button
+                                    color="inherit"
+                                    onClick={() => {
+                                        setShowLogin(true)
+                                        setShowSignUp(false)
+                                    }}
+                                >
+                                    Login
+                                </Button>
+                            </>
+                        ) : (
+                            <>
+                                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                                    <WelcomeMessage username={username} />
+                                </Typography>
+                                <Button color="inherit" onClick={handleLogout}>Logout</Button>
+                            </>
+                        )}
+                    </Toolbar>
+                </AppBar>
+
+                <Container sx={{ mt: 4 }}>
+
+                    {!isLoggedIn && showSignUp && <SignUp onSignUpSuccess={handleSignUpSuccess} />}
+                    {!isLoggedIn && showLogin && <Login onLoginSuccess={handleLoginSuccess} />}
+                    {isLoggedIn && (
+                        <Box sx={{ display: "flex", mt: 4 }}>
+                            <Box sx={{ flex: 3, pr: 2 }}>
                                 <MyPhotos />
-                            </Container>
-                            <Container sx={{flex:1}}>
+                            </Box>
+                            <Box sx={{ flex: 1 }}>
                                 <UploadForm />
-                            </Container>
-                        </Container>
-                    </>
-                )}
+                            </Box>
+                        </Box>
+                        // <>
+                        //     <WelcomeMessage username={username} />
+                        //     <Container sx={{ display: 'flex' }} >
+                        //         <Container sx={{ flex: 3 }}>
+                        //             <MyPhotos />
+                        //         </Container>
+                        //         <Container sx={{ flex: 1 }}>
+                        //             <UploadForm />
+                        //         </Container>
+                        //     </Container>
+                        // </>
+                    )}
+                </Container>
             </Container>
-        </Container>
+        </ThemeProvider>
     )
 }
 
