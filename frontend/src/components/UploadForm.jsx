@@ -1,10 +1,10 @@
 // frontend/src/components/UploadForm.jsx
 import React, { useState } from 'react'
-import { Button, Container, Typography } from '@mui/material'
+import { Button, Container, Grid, Typography } from '@mui/material'
 
 const UploadForm = () => {
     const [file, setFile] = useState(null)
-    const [filename, setFilename] =useState('')
+    const [filename, setFilename] = useState('')
     const [error, setError] = useState(null)
 
     const handleChange = (e) => {
@@ -56,26 +56,34 @@ const UploadForm = () => {
                 Upload Image
             </Typography>
             <form onSubmit={handleSubmit}>
-                <input 
-                    type='file'
-                    accept='image/*'
-                    onChange={handleChange}
-                    style={{ display: 'none'}}
-                    id='upload-button'
-                />
-                <label htmlFor="upload-button">
-                    <Button component="span" variant="contained" color="primary">
-                        Choose File
-                    </Button>
-                </label>
-                <Typography variant='body1' display='inline' gutterBottom>
-                    {filename && `Selected file: ${filename}`}
-                </Typography>
-                <Button type="submit" variant="contained" color="primary" disabled={!file}>
-                    Upload
-                </Button>
+                <Grid container spacing={2} alignItems="center">
+                    <Grid item>
+                        <input
+                            type='file'
+                            accept='image/*'
+                            onChange={handleChange}
+                            style={{ display: 'none' }}
+                            id='upload-button'
+                        />
+                        <label htmlFor="upload-button">
+                            <Button component="span" variant="contained" color="primary">
+                                Choose File
+                            </Button>
+                        </label>
+                    </Grid>
+                    <Grid item>
+                        <Button type="submit" variant="contained" color="primary" disabled={!file}>
+                            Upload
+                        </Button>
+                    </Grid>
+                </Grid>
+                {filename && (
+                    <Typography variant='body1' style={{ marginTop: '16px' }}>
+                        Selected file: {filename}
+                    </Typography>
+                )}
                 {error && (
-                    <Typography variant="body1" color="error">
+                    <Typography variant="body1" color="error" style={{ marginTop: '16px' }}>
                         {error}
                     </Typography>
                 )}
