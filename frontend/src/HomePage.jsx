@@ -7,14 +7,17 @@ import {
     Container,
     CssBaseline,
     ThemeProvider,
-    createTheme,
+    // createTheme,
     Box,
 } from "@mui/material"
+import { createTheme } from "@mui/material/styles"
 import SignUp from "./components/SignUp"
 import Login from "./components/Login"
 import WelcomeMessage from "./components/WelcomeMessage"
 import UploadForm from "./components/UploadForm"
 import MyPhotos from "./components/MyPhotos"
+import UserSearch from "./components/UserSearch"
+
 
 const theme = createTheme({
     palette: {
@@ -102,25 +105,17 @@ const HomePage = () => {
                     {!isLoggedIn && showSignUp && <SignUp onSignUpSuccess={handleSignUpSuccess} />}
                     {!isLoggedIn && showLogin && <Login onLoginSuccess={handleLoginSuccess} />}
                     {isLoggedIn && (
-                        <Box sx={{ display: "flex", mt: 4 }}>
-                            <Box sx={{ flex: 3, pr: 2 }}>
-                                <MyPhotos />
+                        <>
+                            <UserSearch />
+                            <Box sx={{ display: "flex", mt: 4 }}>
+                                <Box sx={{ flex: 3, pr: 2 }}>
+                                    <MyPhotos />
+                                </Box>
+                                <Box sx={{ flex: 1 }}>
+                                    <UploadForm />
+                                </Box>
                             </Box>
-                            <Box sx={{ flex: 1 }}>
-                                <UploadForm />
-                            </Box>
-                        </Box>
-                        // <>
-                        //     <WelcomeMessage username={username} />
-                        //     <Container sx={{ display: 'flex' }} >
-                        //         <Container sx={{ flex: 3 }}>
-                        //             <MyPhotos />
-                        //         </Container>
-                        //         <Container sx={{ flex: 1 }}>
-                        //             <UploadForm />
-                        //         </Container>
-                        //     </Container>
-                        // </>
+                        </>
                     )}
                 </Container>
             </Container>

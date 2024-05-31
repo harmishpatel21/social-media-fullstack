@@ -129,11 +129,12 @@ def serve_upload(filename):
 
 @app.route('/api/search', methods=['GET'])
 def search_user():
+    print("===========SEARCHING==========")
     query = request.args.get('q')
     if not query:
         return jsonify({'error': 'A search query is required'}), 400
     
-    users = User.query.filter(User.username.ilike(f'%{query}')).all()
+    users = User.query.filter(User.username.ilike(f'%{query}%')).all()
     results = [{'id': user.id, 'username': user.username} for user in users]
 
     return jsonify(results)
