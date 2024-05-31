@@ -127,6 +127,16 @@ def serve_upload(filename):
     print("FILENAME====", filename)
     return send_from_directory(app.config['UPLOADS_DEFAULT_DEST'], filename)
 
+@app.route('/api/search', methods=['GET'])
+def search_user():
+    query = request.args.get('q')
+    if not query:
+        return jsonify({'error': 'A search query is required'}), 400
+    
+    users = User.query.filter(User.username.ilike(f'%{query}')).all()
+    results = [{'id': user.id, 'username': user.username} for user in users]
+
+    return jsonify(results)
 
 if __name__ == "__main__":
     with app.app_context():
