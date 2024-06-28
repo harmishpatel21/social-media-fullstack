@@ -106,9 +106,6 @@ def my_photos():
     if not user:
         return jsonify( {'success': False, 'error': 'User Not Found'}), 404
     
-    user__ = User.query.filter_by(username=user).first()
-    user_id = user__.id
-    
     if not user:
         return jsonify({'success': False, 'error': 'User Not Found'}), 404
     
@@ -138,6 +135,22 @@ def search_user():
     results = [{'id': user.id, 'username': user.username} for user in users]
 
     return jsonify(results)
+
+@app.route('/api/user-photos/<string:username>', methods=['GET'])
+#@jwt_required()
+def get_user_photos(username):
+    user = User.query.filter_by(username=username).first() 
+    if not user:
+        return jsonify({'success': False, 'error': 'User Not Found'}), 404
+    
+    photos = Post.query.filter_by(user_id=user.username).all()
+    print(photos)
+    
+    if not photos:
+        return jsonify({'success': False, 'error': 'No Photos Available'}), 404 
+    
+    photos_data = [{'id': photo.id, 'image_file': photo.image_file} for photo in photos]
+    return jsonify({'success': True, 'photos': photos_data}), 200 
 
 if __name__ == "__main__":
     with app.app_context():

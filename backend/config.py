@@ -15,7 +15,7 @@ app = Flask(__name__)
 CORS(app, resources={r'/api/*': {'origins': '*'}})
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mydb.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
 # app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')

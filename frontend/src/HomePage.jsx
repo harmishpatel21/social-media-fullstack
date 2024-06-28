@@ -38,15 +38,17 @@ const HomePage = () => {
     const [showSignUp, setShowSignUp] = useState(false)
     const [showLogin, setShowLogin] = useState(false)
     const [isLoggedIn, setIsLoggedIn] = useState(false)
-    const [username, setUsername] = useState(false)
+    const [username, setUsername] = useState('')
+    const [token, setToken] = useState('')
 
     const handleSignUpSuccess = () => {
         setShowSignUp(false)
         setShowLogin(true)
     }
 
-    const handleLoginSuccess = (username) => {
+    const handleLoginSuccess = (username, token) => {
         setUsername(username)
+        setToken(token)
         setIsLoggedIn(true)
         setShowSignUp(false)
         setShowLogin(false)
@@ -54,13 +56,13 @@ const HomePage = () => {
 
     const handleLogout = () => {
         setUsername('')
+        setToken('')
         setIsLoggedIn(false)
     }
 
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-
             <Container>
                 <AppBar position="static" color="primary">
                     <Toolbar>
@@ -73,8 +75,8 @@ const HomePage = () => {
                                 <Button
                                     color="inherit"
                                     onClick={() => {
-                                        setShowSignUp(true)
-                                        setShowLogin(false)
+                                        setShowSignUp(true);
+                                        setShowLogin(false);
                                     }}
                                 >
                                     Sign Up
@@ -82,8 +84,8 @@ const HomePage = () => {
                                 <Button
                                     color="inherit"
                                     onClick={() => {
-                                        setShowLogin(true)
-                                        setShowSignUp(false)
+                                        setShowLogin(true);
+                                        setShowSignUp(false);
                                     }}
                                 >
                                     Login
@@ -101,12 +103,11 @@ const HomePage = () => {
                 </AppBar>
 
                 <Container sx={{ mt: 4 }}>
-
                     {!isLoggedIn && showSignUp && <SignUp onSignUpSuccess={handleSignUpSuccess} />}
                     {!isLoggedIn && showLogin && <Login onLoginSuccess={handleLoginSuccess} />}
                     {isLoggedIn && (
                         <>
-                            <UserSearch />
+                            <UserSearch token={token} />
                             <Box sx={{ display: "flex", mt: 4 }}>
                                 <Box sx={{ flex: 3, pr: 2 }}>
                                     <MyPhotos />
